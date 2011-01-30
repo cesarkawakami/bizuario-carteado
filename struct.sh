@@ -1,8 +1,2 @@
-#!/bin/bash
-for str in "$@"
-do
-    mkdir -p $str
-    echo n=$str > $str/Makefile
-    cat Makefile >> $str/Makefile
-    cp modelo.cpp $str/$str.cpp
-done
+for i in a b c; do mkdir $i; echo n=$i > $i/Makefile; cat Makefile >> $i/Makefile;
+cp modelo.cpp $i/$i.cpp; done

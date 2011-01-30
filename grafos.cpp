@@ -72,10 +72,9 @@ vector<int> graph[maxn];
 huge cap[maxn][maxn];
 int V;
 
-// algorithm data
-int dist[maxn], father[maxn], ndst[maxn], curarc[maxn];
 huge dinic(int s, int t)
 {
+  static int dist[maxn], father[maxn], ndst[maxn], curarc[maxn];
   huge ans = 0;
   // reverse bfs
   fill(ndst, ndst+V+1, 0); ndst[V] = V;
@@ -166,7 +165,7 @@ struct EKMaxFlow
 } ekmf;
 
 /////////////////////////////////////////////////////////////////////
-//Testa se existe um perfect-matching num grafo generico.
+// Testa se existe um perfect-matching num grafo generico.
 /////////////////////////////////////////////////////////////////////
 struct perfectmatching //depende de maxflow
 {
@@ -397,7 +396,8 @@ int hungarian()
 int n,m;
 /*cap[0][1][0] = fluxo desejado, cst[0][1][0] = 0*/
 long long cap[MAXN][MAXN][2];/*cap[i][j][0] = capacidades dadas, cap[i][j][1] = 0*/
-long long cst[MAXN][MAXN][2];/*cst[i][j][0] = custos dados, cst[i][j][1] = -cst[j][i][0]*/
+long long cst[MAXN][MAXN][2];/*cst[i][j][0] = custos dados, 
+                               cst[i][j][1] = -cst[j][i][0]*/
 int par[MAXN],pr[MAXN];
 long long p[MAXN];
 
@@ -545,7 +545,7 @@ int tightness[nmax];
 int order[nmax];
 int n, nvalid;
 
-_inline(int minimumCutPhase)()
+int minimumCutPhase()
 {
   memset(marked, 0, sizeof(marked));
   memset(tightness, 0, sizeof(tightness));
