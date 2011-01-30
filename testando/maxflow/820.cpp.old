@@ -1,0 +1,144 @@
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cassert>
+#include <cmath>
+#include <vector>
+#include <set>
+#include <map>
+#include <list>
+#include <deque>
+#include <queue>
+#include <stack>
+#include <functional>
+#include <sstream>
+#include <iostream>
+#include <ctime>
+#include <algorithm>
+using namespace std;
+
+#define DEBUG(x...) printf(x)
+#define all(v) (v).begin(),(v).end()
+#define rall(v) (v).rbegin(),(v).rend()
+#define _foreach(it, b, e) for(__typeof__(b) it = (b); it != (e); ++it)
+#define foreach(x...) _foreach(x)
+
+typedef long long int huge;
+
+const int INF = 1000000000;
+const huge hugeinf = 0x3f3f3f3f3f3f3f3fll; // sao dois L's!!!
+const double eps = 1e-9;
+
+////////////////////////////////////////////////////////////////////////////////
+// EDMONDS-KARP MAXFLOW O(max(VE^2, MaxFlow*V))
+////////////////////////////////////////////////////////////////////////////////
+#define MAXN 205 // maximo de vertices do grafo
+int mtx[MAXN][MAXN];//fluxo
+// int lista[MAXN][MAXN];//lista adj
+// int qte[MAXN];//grau de cada vertice
+vector<int> lista[MAXN];
+int V;//arestas,vertices
+int maxflow(int saida,int destino)//O(Maxfl*V), mas eh bem mais rapido
+{
+  int i,j;
+  int maxfl=0;
+  int marca[MAXN];
+  int ant[MAXN];
+  int cap;
+  while(1)
+    {
+      for(i=0;i<V;i++)
+        {
+	  marca[i]=0;
+	  ant[i]=-1;
+        }
+      marca[saida]=1;
+      int ifila=0;
+      int ffila=1;
+      int fila[MAXN];
+      int vaux;
+      fila[0]=saida;
+      marca[saida]=1;
+      while(ifila<ffila)
+        {
+	  vaux=fila[ifila];
+	  if(vaux==destino)break;
+	  for(i=0;i<qte[vaux];i++)
+            {
+	      if(marca[lista[vaux][i]]==0 && mtx[vaux][lista[vaux][i]]>0)
+                {
+		  marca[lista[vaux][i]]=1;
+		  fila[ffila]=lista[vaux][i];
+		  ant[lista[vaux][i]]=vaux;  
+		  ffila++; 
+                }
+            }    
+	  ifila++;
+        }//acha caminho
+      if(vaux!=destino)break;//nao acho caminho ate destino
+      int atual=destino;
+      int cap=INF;
+      while(atual!=saida)
+        {
+	  int prox=ant[atual];
+	  if(mtx[prox][atual]<cap)cap=mtx[prox][atual];
+	  atual=prox;
+        }
+      atual=destino;
+        
+      while(atual!=saida)
+        {
+	  int prox=ant[atual];
+	  mtx[atual][prox]=mtx[atual][prox]+cap;
+	  mtx[prox][atual]=mtx[prox][atual]-cap;
+	  atual=prox;
+        }
+      maxfl+=cap;
+    }
+  return maxfl;
+}
+//fim maxflow
+
+void addedge(int d, int b, int c)
+{
+  if(mtx[d][b] == 0)
+    {
+      mtx[b][d] = mtx[d][b] = c;
+      lista[d][qte[d]++] = b;
+      lista[b][qte[b]++] = d;
+    }
+  else
+    {
+      mtx[b][d] = (mtx[d][b] += c);
+    }
+}
+
+int main()
+{
+  int n, test = 1;
+  while(scanf(" %d", &n) == 1 && n != 0)
+    {
+      int s, t, e;
+      scanf(" %d %d %d", &s, &t, &e);
+      --s; --t;
+
+      // init graph
+      V = n;
+      memset(mtx, 0, sizeof(mtx));
+      memset(lista, 0, sizeof(lista));
+      memset(qte, 0, sizeof(qte));
+      
+      for(int i=0; i<e; ++i)
+	{
+	  int a, b, c;
+	  scanf(" %d %d %d", &a, &b, &c);
+	  addedge(--a, --b, c);
+	}
+
+      int mf = maxflow(s, t);
+
+      printf("Network %d\n", test++);
+      printf("The bandwidth is %d.\n\n", mf);
+    }
+  return 0;
+}
