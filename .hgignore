@@ -2,3 +2,8 @@ syntax: glob
 *.DS_Store
 *~
 *.dSYM
+bizuario.aux
+bizuario.log
+bizuario.pdf
+bizuario.synctex.gz
+bizuario.toc
