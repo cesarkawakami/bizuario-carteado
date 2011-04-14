@@ -643,3 +643,97 @@ void multiplica(int a, int b)
       return;
     }
 }
+
+////////////////////////////////
+/// Closest - Pair problem 2D
+////////////////
+#include<cstdio>
+#include<cstring>
+#include<cstdlib>
+#include<cassert>
+#include<cmath>
+#include<vector>
+#include<set>
+#include<map>
+#include<list>
+#include<deque>
+#include<queue>
+#include<stack>
+#include<functional>
+#include<sstream>
+#include<iostream>
+#include<ctime>
+#include<algorithm>
+using namespace std;
+
+#define DEBUG(x...) printf(x)
+#define all(v) (v).begin(),(v).end()
+#define rall(v) (v).begin(),(v).rend()
+#define _foreach(it,b,e) for(__typeof__(b) it=(b); it!=(e);++it)
+#define foreach(x...) _foreach(x)
+
+typedef long long int huge;
+
+const int inf = 0x3f3f3f3f;
+const huge hugeinf = 0x3f3f3f3f3f3f3f3fll;//dois L's
+const double eps = 1e-9;
+
+int n;
+pair<double,double> point[15000];
+pair<double,double> tmp[15]; 
+bool mcomp(const pair<double,double> &x,const pair<double,double> &y)
+{
+    return x.second<y.second;   
+}
+double go(const int a,const int b)
+{
+  if(b<a+3)
+    {
+      double ret = hugeinf;
+      for(int i=a;i<b;i++)
+	for(int j=i+1;j<b;j++)
+	  ret=min(ret,hypot(point[i].first-point[j].first,point[i].second-point[j].second));
+      return ret;
+    }
+  double da = go(a,(a+b)/2),db = go((a+b)/2,b);
+  double ret = min(da,db);
+      
+    vector<pair<double,double> > left;
+    for(int i=(a+b)/2;i<b;i++)
+        if(point[i].first-point[(a+b)/2].first< ret)
+            left.push_back(point[i]);
+    sort(all(left),mcomp);
+    for(int i=a;i<(a+b)/2;i++)
+    {
+        int x = lower_bound(all(left),make_pair(0,point[i].second-ret-0.01),mcomp)-left.begin();
+        int y = upper_bound(all(left),make_pair(0,point[i].second+ret+0.01),mcomp)-left.begin();
+        for(int j=x;j<y;j++)
+        {
+            ret=min(ret,hypot(point[i].first-left[j].first,point[i].second-left[j].second));
+        }
+    }
+  return ret;
+}
+int main ()
+{
+  while(scanf("%d",&n)==1)
+    {
+      if(!n)break;
+      for(int i=0;i<n;i++)
+	scanf("%lf %lf",&point[i].first,&point[i].second);
+      sort(point,point+n);
+      double x = go(0,n);
+
+      /* double y=hugeinf;
+      for(int i=0;i<n;i++)
+	for(int j=i+1;j<n;j++)
+	  y=min(y,hypot(point[i].first-point[j].first,point[i].second-point[j].second));
+	  printf("%lf ",y);*/
+    
+      if(x>=10000)
+	printf("INFINITY\n");
+      else
+	printf("%.4lf\n",x);
+    }
+  return 0;
+}
