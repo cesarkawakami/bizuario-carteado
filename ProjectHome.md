@@ -1,0 +1,1 @@
+Bizuário da equipe [ITA](ITA.md) Carteado com implementações de alguns algoritmos clássicos.
